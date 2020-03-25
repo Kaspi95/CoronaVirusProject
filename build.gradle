@@ -1,0 +1,9 @@
+apply plugin: "java"
+
+sourceSets{
+	main.java.srcDir "src/main/Controller"
+	test.java.srcDir "src/tests"
+}
+
+repositories {}
+dependencies {}
