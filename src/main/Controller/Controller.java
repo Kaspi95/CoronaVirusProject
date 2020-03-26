@@ -1,6 +1,7 @@
 package main.Controller;
 
 import main.View.MainWindow;
+import main.View.TestWindow;
 
 public class Controller {
     private static final Controller instance = new Controller();
