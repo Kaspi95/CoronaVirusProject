@@ -13,7 +13,7 @@ public class Controller {
     }
 
     public void initialize() {
-        mainWindow = new MainWindow();
+        //mainWindow = new MainWindow();
     }
 
     public void closeAndSave() {
