@@ -1,7 +1,5 @@
 package main.Model;
 
-import javafx.scene.Parent;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.time.LocalDate;
@@ -33,11 +31,11 @@ public class Person {
     }
 
     public Person(String name, LocalDate birthDate, String birthPlace, String ParentID1, String ParentID2) {
-        new Person(name, birthDate, birthPlace, ParentID1, ParentID2, null, null);
+        this(name, birthDate, birthPlace, ParentID1, ParentID2, null, null);
     }
 
     public Person(String name, LocalDate birthDate, String birthPlace) {
-        new Person(name, birthDate, birthPlace, null, null, null, null);
+        this(name, birthDate, birthPlace, null, null, null, null);
     }
 
 
