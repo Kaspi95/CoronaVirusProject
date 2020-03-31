@@ -9,62 +9,17 @@ public class DataBase {
     public String url;
     Connection connection = null;
 
-    public DataBase(String filePath) {
-        this.url = "jdbc:sqlite:" + filePath;
+    public interface Method {
+        public void method(PreparedStatement stmt) throws SQLException;
+    }
+
+    private void executeUpdate(Method method, String sql) {
         try {
             // create a database connection, if there is no one yet, it will create one
             connection = DriverManager.getConnection(url);
-            //create a table
-            String sql = "CREATE TABLE IF NOT EXISTS familytree (\n"
-                    + "    id text PRIMARY KEY,\n"
-                    + "    name text NOT NULL,\n"
-                    + "    birthDate DATE,\n"
-                    + "    deathDate DATE,\n"
-                    + "    birthPlace text,\n"
-                    + "    deathPlace text,\n"
-                    + "    parentID1 text,\n"
-                    + "    parentID2 text\n"
-                    + ");";
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.execute();
-
-
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException e) {
-                // connection close failed.
-                System.err.println(e.getMessage());
-            }
-        }
-    }
-
-    public void addNewPerson(Person person) {
-        person.getDetails();
-        //System.out.println(person.getDeathDate());
-        //System.out.println(Date.valueOf(person.getDeathDate()));
-        String sql = "INSERT INTO familytree(id,name,birthDate,deathDate,birthPlace,deathPlace,parentID1,parentID2) VALUES(?,?,?,?,?,?,?,?)";
-        try {
-            connection = DriverManager.getConnection(url);
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, person.getId());
-            stmt.setString(2, person.getName());
-            stmt.setDate(3, Date.valueOf(person.getBirthDate()));
-            if (person.getDeathDate() != null)
-                stmt.setDate(4, Date.valueOf(person.getDeathDate()));
-            else
-                stmt.setNull(4, Types.DATE);
-            stmt.setString(5, person.getBirthPlace());
-            stmt.setString(6, person.getDeathPlace());
-            stmt.setString(7, person.getParentID1());
-            stmt.setString(8, person.getParentID2());
+            method.method(stmt);
             stmt.executeUpdate();
-
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
@@ -77,6 +32,87 @@ public class DataBase {
             }
         }
     }
+
+    //----executeUpdate
+
+    public DataBase(String filePath) {
+        this.url = "jdbc:sqlite:" + filePath;
+        class Preparator implements Method {
+            @Override
+            public void method(PreparedStatement stmt) throws SQLException {
+            }
+        }
+
+        executeUpdate(new Preparator(), "CREATE TABLE IF NOT EXISTS familyTree (\n"
+                + "    id text PRIMARY KEY,\n"
+                + "    name text NOT NULL,\n"
+                + "    birthDate DATE,\n"
+                + "    deathDate DATE,\n"
+                + "    birthPlace text,\n"
+                + "    deathPlace text,\n"
+                + "    parentID1 text,\n"
+                + "    parentID2 text\n"
+                + ");");
+    }
+
+    public void addNewPerson(Person person) {
+        class Preparator implements Method {
+            @Override
+            public void method(PreparedStatement stmt) throws SQLException {
+                stmt.setString(1, person.getId());
+                stmt.setString(2, person.getName());
+                stmt.setDate(3, Date.valueOf(person.getBirthDate()));
+                if (person.getDeathDate() != null)
+                    stmt.setDate(4, Date.valueOf(person.getDeathDate()));
+                else
+                    stmt.setNull(4, Types.DATE);
+                stmt.setString(5, person.getBirthPlace());
+                stmt.setString(6, person.getDeathPlace());
+                stmt.setString(7, person.getParentID1());
+                stmt.setString(8, person.getParentID2());
+            }
+        }
+        executeUpdate(new Preparator(), "INSERT INTO familyTree(id,name,birthDate,deathDate,birthPlace,deathPlace,parentID1,parentID2) VALUES(?,?,?,?,?,?,?,?)");
+    }
+
+    public void modifyPeople(String conditionColumn, String conditionValue, String updateColumn, String updateValue) {
+        //TODO a modifyPerson() alapján kibővíteni
+    }
+
+    /**
+     * @param conditionValue
+     * @param updateColumn   Should not be set by user!
+     * @param updateValue
+     */
+    public void modifyPerson(String conditionValue, String updateColumn, String updateValue) {
+        //There is no possibility of using a dynamic updateColumn name in jdbc
+        class Preparator implements Method {
+            @Override
+            public void method(PreparedStatement stmt) throws SQLException {
+                stmt.setString(1, updateValue);
+                stmt.setString(2, conditionValue);
+            }
+        }
+        executeUpdate(new Preparator(), "UPDATE familyTree SET " + updateColumn + " = ? WHERE id = ?");
+    }
+
+    public void modifyPerson(String conditionValue, String updateColumn, LocalDate updateValue) {
+
+        class Preparator implements Method {
+            @Override
+            public void method(PreparedStatement stmt) throws SQLException {
+                if (updateValue != null)
+                    stmt.setDate(1, Date.valueOf(updateValue));
+                else
+                    stmt.setNull(4, Types.DATE);
+                stmt.setString(2, conditionValue);
+            }
+        }
+
+        executeUpdate(new Preparator(), "UPDATE familyTree SET " + updateColumn + " = ? WHERE id = ?");
+    }
+
+    //----executeQuery
 
     public void printDataBase() {
         String sql = "SELECT * FROM familytree";
@@ -181,66 +217,10 @@ public class DataBase {
         }
     }
 
-    public void modifyPeople(String conditionColumn, String conditionValue, String updateColumn, String updateValue){
-        //TODO a modifyPerson() alapján kibővíteni
-    }
-    /**
-     * @param conditionValue
-     * @param updateColumn Should not be set by user!
-     * @param updateValue
-     */
-    public void modifyPerson(String conditionValue, String updateColumn, String updateValue) {
-        //There is no possibility of using a dynamic updateColumn name in jdbc
-        String sql = "UPDATE familyTree SET " + updateColumn + " = ? WHERE id = ?";
-        try {
-            connection = DriverManager.getConnection(url);
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, updateValue);
-            stmt.setString(2, conditionValue);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException e) {
-                // connection close failed.
-                System.err.println(e.getMessage());
-            }
-        }
-    }
-
-    public void modifyPerson(String conditionValue, String updateColumn, LocalDate updateValue) {
-        String sql = "UPDATE familyTree SET " + updateColumn + " = ? WHERE id = ?";
-        try {
-            connection = DriverManager.getConnection(url);
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            if (updateValue != null)
-                stmt.setDate(1, Date.valueOf(updateValue));
-            else
-                stmt.setNull(4, Types.DATE);
-            stmt.setString(2, conditionValue);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException e) {
-                // connection close failed.
-                System.err.println(e.getMessage());
-            }
-        }
-    }
 
     public void delete() {
     }
 
-    public void droptable() {
+    public void dropTable() {
     }
-
 }
