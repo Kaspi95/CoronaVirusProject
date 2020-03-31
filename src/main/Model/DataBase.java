@@ -104,7 +104,7 @@ public class DataBase {
                 if (updateValue != null)
                     stmt.setDate(1, Date.valueOf(updateValue));
                 else
-                    stmt.setNull(4, Types.DATE);
+                    stmt.setNull(1, Types.DATE);
                 stmt.setString(2, conditionValue);
             }
         }
