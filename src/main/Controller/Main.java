@@ -17,6 +17,7 @@ public class Main {
         //dataBase.selectPerson("25b21127-368a-4dd2-a8db-6403729229f1");
         //dataBase.selectChildren(null);
         dataBase.modifyPerson("b731c8b9-7db4-4a31-b431-564d7904b5ce", "name", "Geza");
+        dataBase.modifyPerson("b731c8b9-7db4-4a31-b431-564d7904b5ce", "deathDate", LocalDate.of(2002,10,01));
 
     }
 }

@@ -181,19 +181,22 @@ public class DataBase {
         }
     }
 
+    public void modifyPeople(String conditionColumn, String conditionValue, String updateColumn, String updateValue){
+        //TODO a modifyPerson() alapján kibővíteni
+    }
     /**
-     * @param id
-     * @param column Should not be set by user!
-     * @param value
+     * @param conditionValue
+     * @param updateColumn Should not be set by user!
+     * @param updateValue
      */
-    public void modifyPerson(String id, String column, String value) {
-        //There is no possibility of using a dynamic column name in jdbc
-        String sql = "UPDATE familyTree SET " + column + " = ? WHERE id = ?";
+    public void modifyPerson(String conditionValue, String updateColumn, String updateValue) {
+        //There is no possibility of using a dynamic updateColumn name in jdbc
+        String sql = "UPDATE familyTree SET " + updateColumn + " = ? WHERE id = ?";
         try {
             connection = DriverManager.getConnection(url);
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, value);
-            stmt.setString(2, id);
+            stmt.setString(1, updateValue);
+            stmt.setString(2, conditionValue);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -209,16 +212,16 @@ public class DataBase {
         }
     }
 
-    public void modifyPerson(String id, String column, LocalDate value) {
-        String sql = "UPDATE familyTree SET " + column + " = ? WHERE id = ?";
+    public void modifyPerson(String conditionValue, String updateColumn, LocalDate updateValue) {
+        String sql = "UPDATE familyTree SET " + updateColumn + " = ? WHERE id = ?";
         try {
             connection = DriverManager.getConnection(url);
             PreparedStatement stmt = connection.prepareStatement(sql);
-            if (value != null)
-                stmt.setDate(1, Date.valueOf(value));
+            if (updateValue != null)
+                stmt.setDate(1, Date.valueOf(updateValue));
             else
                 stmt.setNull(4, Types.DATE);
-            stmt.setString(2, id);
+            stmt.setString(2, conditionValue);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
