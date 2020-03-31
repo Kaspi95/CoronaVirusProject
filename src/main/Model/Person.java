@@ -2,7 +2,6 @@ package main.Model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.time.LocalDate;
 import java.util.UUID;
 
 public class Person {
@@ -28,6 +27,11 @@ public class Person {
         this.deathPlace = deathPlace;
         this.ParentID1 = ParentID1;
         this.ParentID2 = ParentID2;
+    }
+
+    public Person(String id, String name, LocalDate birthDate, String birthPlace, String ParentID1, String ParentID2, LocalDate deathDate, String deathPlace) {
+        this(name, birthDate, birthPlace, ParentID1, ParentID2, deathDate, deathPlace);
+        this.id = id;
     }
 
     public Person(String name, LocalDate birthDate, String birthPlace, String ParentID1, String ParentID2) {
