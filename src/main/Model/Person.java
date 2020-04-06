@@ -1,32 +1,44 @@
 package main.Model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.UUID;
 
 public class Person {
 
-    Person Parent1;
-    Person Parent2;
+    String ParentID1;
+    String ParentID2;
 
-    ArrayList<Person> children = new ArrayList<Person>();
+    String id;
 
     String name;
-    Date birthDate;
-    Date deathDate;
+    LocalDate birthDate;
+    LocalDate deathDate;
     String birthPlace;
     String deathPlace;
-    String job;
 
-    public Person(String name, Date birthDate, String birthPlace, Date deathDate, String deathPlace) {
+
+    public Person(String name, LocalDate birthDate, String birthPlace, String ParentID1, String ParentID2, LocalDate deathDate, String deathPlace) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.birthDate = birthDate;
         this.birthPlace = birthPlace;
         this.deathDate = deathDate;
         this.deathPlace = deathPlace;
+        this.ParentID1 = ParentID1;
+        this.ParentID2 = ParentID2;
     }
 
-    public Person(String name, Date birthDate, String birthPlace) {
-        new Person(name, birthDate, birthPlace, null, null);
+    public Person(String id, String name, LocalDate birthDate, String birthPlace, String ParentID1, String ParentID2, LocalDate deathDate, String deathPlace) {
+        this(name, birthDate, birthPlace, ParentID1, ParentID2, deathDate, deathPlace);
+        this.id = id;
+    }
+
+    public Person(String name, LocalDate birthDate, String birthPlace, String ParentID1, String ParentID2) {
+        this(name, birthDate, birthPlace, ParentID1, ParentID2, null, null);
+    }
+
+    public Person(String name, LocalDate birthDate, String birthPlace) {
+        this(name, birthDate, birthPlace, null, null, null, null);
     }
 
 
@@ -52,4 +64,35 @@ public class Person {
     public void removeChild(Person child) {
     }
 
+    public String getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public LocalDate getBirthDate() {
+        return this.birthDate;
+    }
+
+    public LocalDate getDeathDate() {
+        return this.deathDate;
+    }
+
+    public String getBirthPlace() {
+        return this.birthPlace;
+    }
+
+    public String getDeathPlace() {
+        return this.deathPlace;
+    }
+
+    public String getParentID1() {
+        return this.ParentID1;
+    }
+
+    public String getParentID2() {
+        return this.ParentID2;
+    }
 }
