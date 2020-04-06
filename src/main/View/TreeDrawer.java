@@ -1,38 +1,46 @@
 package main.View;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+
 import javax.swing.*;
+import java.awt.*;
 
 public class TreeDrawer {
 
     private JPanel drawField;
 
-    public TreeDrawer(JPanel drawField){
-        drawField.setLayout(null);  //Turning off automatic allignment and whatnot
-        JLabel label = new JLabel();
-        label.setText("Kurva");
-        label.setHorizontalAlignment(0);
-        label.setVerticalAlignment(0);
-        drawField.add(label);
-        label.setVisible(true);
-        drawField.setVisible(true);
-        drawField.repaint();
-        this.drawField=drawField;
+    public TreeDrawer(JPanel drawField) {    //set params!
+
+        drawField.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1, true, true));  // params( magasság,szélesség,borders of this container,-,-)
+        this.drawField = drawField;
     }
 
-    public void drawHorizontalLine(){        //TODO belerak egy label-t amit kitölt egy vízszintes vonallal
+    public void drawTree(){
+
+
+
     }
 
-    public void drawVerticalLine(){        //TODO belerak egy label-t, amit kitöl egy függőleges vonallal
-    }
+    public void drawPerson(String name, String id, int xCoordinate, int yCoordinate) {
 
-    public void drawPerson(String name, String id) {        //TODO belerak egy label-t amit kitölt az aktuális Person nevével
-
-        JLabel label = new JLabel();
+        MyLabel label = new MyLabel(id);
         label.setText(name);
+        drawField.add(label, new GridConstraints(yCoordinate, xCoordinate, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
+    public void drawHorizontalLine(int xCoordinate, int yCoordinate) {
+        JLabel label = new JLabel();
+        label.setText("|");
+        drawField.add(label, new GridConstraints(yCoordinate, xCoordinate, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 
+    }
 
+    public void drawVerticalLine(int xCoordinate, int yCoordinate) {
+        JLabel label = new JLabel();
+        label.setText("-");
+        drawField.add(label, new GridConstraints(yCoordinate, xCoordinate, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 
-
+    }
 }
+

@@ -45,8 +45,17 @@ public class MainWindow extends JFrame {
         panel1.setLayout(new BorderLayout(0, 0));
 
         drawField = new JPanel();
-        drawField.setLayout(new GridLayoutManager(5, 5, new Insets(0, 0, 0, 0), -1, -1, true, true));  // params( magasság,szélesség,borders of this container,-,-)
-        panel1.add(drawField, BorderLayout.CENTER);
+
+        //drawField.setLayout(new GridLayoutManager(5, 5, new Insets(0, 0, 0, 0), -1, -1, true, true));  // params( magasság,szélesség,borders of this container,-,-)
+
+        TreeDrawer td = new TreeDrawer(drawField);
+        td.drawPerson("strici", "xx", 0, 0);
+        td.drawVerticalLine(1, 0);
+        td.drawPerson("kurva", "yy", 2, 0);
+        td.drawHorizontalLine(1, 1);
+        td.drawPerson("kurafi", "xy", 1, 2);
+
+        /*
         JLabel testLabel1 = new JLabel();
         JLabel testLabel2 = new JLabel();
         JLabel testLabel3 = new JLabel();
@@ -59,16 +68,9 @@ public class MainWindow extends JFrame {
         drawField.add(testLabel2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         drawField.add(testLabel3, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         drawField.add(testLabel4, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-/*
+        */
 
-        drawField.setLayout(new BorderLayout());
-
-        JLabel label = new JLabel();
-        label.setText("Kurva");
-        drawField.add(label, BorderLayout.CENTER);
         panel1.add(drawField, BorderLayout.CENTER);
-
-    */
     }
 
 
