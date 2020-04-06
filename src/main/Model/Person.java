@@ -11,6 +11,10 @@ public class Person {
 
     String id;
 
+
+
+    int level=0;
+
     String name;
     LocalDate birthDate;
     LocalDate deathDate;
