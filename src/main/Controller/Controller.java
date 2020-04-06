@@ -1,10 +1,12 @@
 package main.Controller;
 
 import main.View.MainWindow;
+import main.View.TestWindow;
 
 public class Controller {
     private static final Controller instance = new Controller();
     private MainWindow mainWindow;
+    private TestWindow testWindow;
 
     private Controller() {}
 
@@ -13,6 +15,7 @@ public class Controller {
     }
 
     public void initialize() {
+        //testWindow = new TestWindow();
         mainWindow = new MainWindow();
     }
 
