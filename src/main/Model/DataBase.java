@@ -2,7 +2,10 @@ package main.Model;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class DataBase {
 
@@ -115,7 +118,7 @@ public class DataBase {
     //----executeQuery
 
     public void printDataBase() {
-        String sql = "SELECT * FROM familytree";
+        String sql = "SELECT * FROM familytree;";
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -139,7 +142,7 @@ public class DataBase {
 
     public Person selectPerson(String id) {
 
-        String sql = "SELECT * FROM familyTree WHERE id=?";
+        String sql = "SELECT * FROM familyTree WHERE id=?;";
         try {
             connection = DriverManager.getConnection(url);
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -179,10 +182,10 @@ public class DataBase {
             connection = DriverManager.getConnection(url);
             PreparedStatement stmt;
             if (parentID == null) {
-                sql = "SELECT * FROM familyTree WHERE parentID1 IS NULL OR parentID2 IS NULL";
+                sql = "SELECT * FROM familyTree WHERE parentID1 IS NULL OR parentID2 IS NULL;";
                 stmt = connection.prepareStatement(sql);
             } else {
-                sql = "SELECT * FROM familyTree WHERE parentID1=? OR parentID2=?";
+                sql = "SELECT * FROM familyTree WHERE parentID1=? OR parentID2=?;";
                 stmt = connection.prepareStatement(sql);
                 stmt.setString(1, parentID);
                 stmt.setString(2, parentID);
@@ -201,6 +204,43 @@ public class DataBase {
                         rs.getString("deathPlace")
                 );
                 tempList.add(temp);
+            }
+            return tempList;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
+    public TreeMap<String,Person> selectAll() {
+        String sql;
+        try {
+            connection = DriverManager.getConnection(url);
+            PreparedStatement stmt;
+                sql = "SELECT * FROM familyTree;";
+            stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            TreeMap<String,Person> tempList = new TreeMap<String,Person>();
+            while (rs.next()) {
+                Person temp = new Person(
+                        rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getDate("birthDate").toLocalDate(),
+                        rs.getString("birthPlace"),
+                        rs.getString("parentID1"),
+                        rs.getString("parentID2"),
+                        rs.getDate("deathDate") == null ? null : rs.getDate("deathDate").toLocalDate(),
+                        rs.getString("deathPlace")
+                );
+                tempList.put(rs.getString("id"),temp);
             }
             return tempList;
         } catch (SQLException e) {
